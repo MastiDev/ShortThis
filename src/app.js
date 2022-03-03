@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const port = process.env.port || 8080;
+const port = process.env.port || 80;
 const fs = require('fs');
 require('dotenv').config();
 
@@ -8,18 +8,30 @@ var dbfile = require('./db.json');
 
 console.clear();
 
+app.use(express.json());
 app.get("/", async function(req, res) {
     res.sendFile(__dirname + '/index.html');
 });
 
 app.get("/:id", async function(req, res) {
     if(dbfile[req.params.id]) {
-        console.log(dbfile[req.params.id]);
-        // res.redirect(dbfile[req.params.id].url);
+        var url = dbfile[req.params.id].url;
+        if(!url.startsWith("https://")) {
+            res.redirect("https://" + url);
+        } else res.redirect(url);
     }else {
         res.redirect("/");
     }
 });
+
+app.post("/create", async function(req, res) {
+    var url = req.body.url;
+    var id = addURL(url);
+    var response = {
+        id: id,
+    }
+    res.send(JSON.stringify(response));
+})
 
 app.get("*", async function(req, res) {
     res.redirect("/");
@@ -29,7 +41,7 @@ app.listen(port, function() {
     console.log(`App started on port ${port}`);
 });
 
-async function addURL(url) {
+function addURL(url) {
     var id = getRandomString();
     if(!dbfile[id]) {
         dbfile[id] = {
@@ -38,21 +50,12 @@ async function addURL(url) {
             created: Date.now(),
         }
     }
-    console.log(dbfile);
     fs.writeFile("./src/db.json", JSON.stringify(dbfile), err =>{
         if(err){
             console.log(err);
         }
     })
     return id;
-}
-
-function getRandomString() {
-    let text = "";
-    const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    for (let i = 0; i < 6; i++)
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-    return text;
 }
 
 async function checkValidURLS() {
@@ -65,7 +68,6 @@ async function checkValidURLS() {
         var datenowunix = time / 1000;
 
         if(validdate < datenowunix) {
-            console.log(data[i].identifyer)
             delete dbfile[data[i].identifyer];
             fs.writeFile("./src/db.json", JSON.stringify(dbfile), err =>{
                 if(err){
@@ -81,3 +83,11 @@ var job = new CronJob('0 * * * *', async function() {
     await checkValidURLS();
 }, null, true, 'Europe/Amsterdam');
 job.start();
+
+function getRandomString() {
+    let text = "";
+    const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    for (let i = 0; i < 6; i++)
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+    return text;
+}
