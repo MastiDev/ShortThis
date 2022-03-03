@@ -1,0 +1,24 @@
+{
+  "name": "url-shorter",
+  "version": "1.0.0",
+  "description": "🔗Simple Express powerd url shorter",
+  "main": "src/app.js",
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "fs": "^0.0.1-security"
+  },
+  "scripts": {
+    "start": "node src/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MastiderMast/URL-shorter.git"
+  },
+  "author": "Masti#5516",
+  "license": "WTFPL",
+  "bugs": {
+    "url": "https://github.com/MastiderMast/URL-shorter/issues"
+  },
+  "homepage": "https://github.com/MastiderMast/URL-shorter#readme"
+}
