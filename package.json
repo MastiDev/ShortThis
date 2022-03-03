@@ -4,6 +4,7 @@
   "description": "🔗Simple Express powerd url shorter",
   "main": "src/app.js",
   "dependencies": {
+    "cron": "^1.8.2",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
     "fs": "^0.0.1-security"

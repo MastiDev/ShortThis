@@ -4,7 +4,7 @@ const port = process.env.port || 8080;
 const fs = require('fs');
 require('dotenv').config();
 
-const dbfile = require('./db.json');
+var dbfile = require('./db.json');
 
 console.clear();
 
@@ -14,7 +14,8 @@ app.get("/", async function(req, res) {
 
 app.get("/:id", async function(req, res) {
     if(dbfile[req.params.id]) {
-        res.redirect(dbfile[req.params.id].url);
+        console.log(dbfile[req.params.id]);
+        // res.redirect(dbfile[req.params.id].url);
     }else {
         res.redirect("/");
     }
@@ -29,9 +30,7 @@ app.listen(port, function() {
 });
 
 async function addURL(url) {
-
     var id = getRandomString();
-
     if(!dbfile[id]) {
         dbfile[id] = {
             identifyer: id,
@@ -45,6 +44,7 @@ async function addURL(url) {
             console.log(err);
         }
     })
+    return id;
 }
 
 function getRandomString() {
@@ -54,3 +54,30 @@ function getRandomString() {
         text += possible.charAt(Math.floor(Math.random() * possible.length));
     return text;
 }
+
+async function checkValidURLS() {
+    var data = JSON.parse(fs.readFileSync("./src/db.json"));
+
+    for(var i in data) {
+        var time = Date.now()
+        var unix = data[i].created / 1000; 
+        var validdate = unix + 604800;
+        var datenowunix = time / 1000;
+
+        if(validdate < datenowunix) {
+            console.log(data[i].identifyer)
+            delete dbfile[data[i].identifyer];
+            fs.writeFile("./src/db.json", JSON.stringify(dbfile), err =>{
+                if(err){
+                    console.log(err);
+                }
+            })
+        }
+    }
+}
+
+var CronJob = require('cron').CronJob;
+var job = new CronJob('0 * * * *', async function() {
+    await checkValidURLS();
+}, null, true, 'Europe/Amsterdam');
+job.start();
