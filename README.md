@@ -1,4 +1,4 @@
-# 🔗URL-shorter🔗
+# 🔗ShortThis🔗
 
 # ⚠️WORK IN PROGRESS⚠️
 This is a simple url shortener, that is not secure or have a nice UI.
@@ -25,5 +25,3 @@ Simple Express powerd url shorter
 5. Open a pull request
 
 *Or just steal the code from the repository and make your own better version :)*
-
-*I know you will do it hehe*
