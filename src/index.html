@@ -4,14 +4,26 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="stylesheet.css">
     <title>ShortThis</title>
     <style>
-        h1,p {
-            font-family: "montserrat",sans-serif; 
+        h1 {
+            color: white;
+            font-family: "montserrat",sans-serif;
+        }
+        p {
+            border: 3px;
+            margin: 3px;
+            color: white;
+            font-family: "montserrat",sans-serif;
+        }
+        html {
+            background-color: #141416;
         }
         .container {
             width: 100%;
             height: 100%;
+            background-color: #141416;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -20,7 +32,6 @@
     </style>
     <script async>
         async function addURL() {
-
             var url = document.getElementById("url").value;
             console.log(url);
 
@@ -43,6 +54,7 @@
         <div>
             <div style="align-items: center;">
                 <h1>ShortThis</h1>
+                <p>simplest URL shortener</p>
                 <p>
                     <input type="text" id="url" placeholder="Enter URL here">
                     <button onclick="addURL()">Shorten</button>
